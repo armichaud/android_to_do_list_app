@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
@@ -69,6 +70,17 @@ fun ToDoList(
                             Icon(Icons.Outlined.CheckCircle, contentDescription = "Mark as done")
                         }
                     }
+                },
+                trailingContent = {
+                    IconButton(
+                        content = {
+                            Icon(
+                                Icons.Outlined.Delete,
+                                contentDescription = "Delete item ${item.label}"
+                            )
+                        },
+                        onClick = { viewModel.removeListItem(item.id) },
+                    )
                 }
             )
         }
