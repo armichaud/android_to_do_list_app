@@ -22,16 +22,36 @@ data class ListItem(
 )
 
 class MainActivityViewModel: ViewModel() {
-    private val _listItems = MutableStateFlow(listOf<ListItem>(ListItem(id = 100, "Item 1"), ListItem(id = 100, "Item 2")))
+    private val _listItems = MutableStateFlow(listOf<ListItem>(ListItem(id = 100, "Item 1"), ListItem(id = 101, "Item 2")))
     val listItems: StateFlow<List<ListItem>> = _listItems.asStateFlow()
+
+    private val _currentInput = MutableStateFlow("")
+    val currentInput: StateFlow<String> = _currentInput.asStateFlow()
 
     private var nextId = 0;
 
-    fun addListItem(item: String) {
-        _listItems.update { list ->
-            list + listOf(ListItem(id = nextId, label = item))
-        }
+    fun updateCurrentInput(input: String) {
+        _currentInput.value = input
+    }
+
+    fun clearCurrentInput() {
+        _currentInput.value = ""
+    }
+
+    fun incrementId() {
         nextId += 1
+    }
+
+    fun addListItem() {
+        _listItems.update { list ->
+            list + listOf(ListItem(id = nextId, label = _currentInput.value))
+        }
+    }
+
+    fun handleDeselect() {
+        addListItem()
+        clearCurrentInput()
+        incrementId()
     }
 
     fun removeListItem(id: Int) {
