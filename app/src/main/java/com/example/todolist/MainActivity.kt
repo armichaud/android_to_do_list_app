@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -60,15 +62,17 @@ fun ToDoList(
 ) {
     val listItems by viewModel.listItems.collectAsStateWithLifecycle()
     val currentInput by viewModel.currentInput.collectAsStateWithLifecycle()
-    Column(modifier = modifier.fillMaxWidth()) {
-        val toDoItems: List<ListItem> = listItems.filter { it.status == Status.Todo }
-        val completedItems: List<ListItem> = listItems.filter { it.status == Status.Done }
-        Text(
-            modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
-            text = "To Do",
-            style = MaterialTheme.typography.titleLarge
-        )
-        toDoItems.forEach {item ->
+    val toDoItems: List<ListItem> = listItems.filter { it.status == Status.Todo }
+    val completedItems: List<ListItem> = listItems.filter { it.status == Status.Done }
+    LazyColumn(modifier = modifier.fillMaxWidth()) {
+        item {
+            Text(
+                modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
+                text = "To Do",
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+        items (toDoItems) {item ->
             ListItem(
                 headlineContent = {
                     Text(text = item.label)
@@ -94,28 +98,32 @@ fun ToDoList(
                 }
             )
         }
-        TextField(
-            modifier = modifier.fillMaxWidth(),
-            shape = RectangleShape,
-            value = currentInput,
-            maxLines = 1,
-            onValueChange = { target: String -> viewModel.updateCurrentInput(target) },
-            placeholder = { Text("New item") },
-            leadingIcon = {
-                IconButton(
-                    modifier = modifier.absolutePadding(left = 16.dp),
-                    onClick = { viewModel.handleDeselect() }
-                ) { Icon(Icons.Outlined.Add, contentDescription = "New list item icon") }
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions( onDone = { viewModel.handleDeselect() })
-        )
-        Text(
-            modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
-            text = "Done",
-            style = MaterialTheme.typography.titleLarge
-        )
-        completedItems.forEach {item ->
+        item {
+            TextField(
+                modifier = modifier.fillMaxWidth(),
+                shape = RectangleShape,
+                value = currentInput,
+                maxLines = 1,
+                onValueChange = { target: String -> viewModel.updateCurrentInput(target) },
+                placeholder = { Text("New item") },
+                leadingIcon = {
+                    IconButton(
+                        modifier = modifier.absolutePadding(left = 16.dp),
+                        onClick = { viewModel.handleDeselect() }
+                    ) { Icon(Icons.Outlined.Add, contentDescription = "New list item icon") }
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions( onDone = { viewModel.handleDeselect() })
+            )
+        }
+        item {
+            Text(
+                modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
+                text = "Done",
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+        items(completedItems) { item ->
             ListItem(
                 headlineContent = {
                     Text(text = item.label, textDecoration = TextDecoration.LineThrough)
@@ -130,7 +138,6 @@ fun ToDoList(
                 },
             )
         }
-
     }
 }
 

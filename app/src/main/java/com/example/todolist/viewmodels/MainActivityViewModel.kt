@@ -49,9 +49,11 @@ class MainActivityViewModel: ViewModel() {
     }
 
     fun handleDeselect() {
-        addListItem()
-        clearCurrentInput()
-        incrementId()
+        if (currentInput.value.isNotBlank()) {
+            addListItem()
+            clearCurrentInput()
+            incrementId()
+        }
     }
 
     fun removeListItem(id: Int) {
