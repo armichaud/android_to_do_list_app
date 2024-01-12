@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ToDoListTheme {
-                // A surface container using the 'background' color from the theme
                 ToDoList(modifier = Modifier.fillMaxSize())
             }
         }
