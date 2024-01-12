@@ -4,8 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CheckCircle
@@ -20,12 +26,17 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.ui.theme.ToDoListTheme
+import com.example.todolist.viewmodels.ListItem
 import com.example.todolist.viewmodels.MainActivityViewModel
 import com.example.todolist.viewmodels.Status
 
@@ -50,25 +61,24 @@ fun ToDoList(
     val listItems by viewModel.listItems.collectAsStateWithLifecycle()
     val currentInput by viewModel.currentInput.collectAsStateWithLifecycle()
     Column(modifier = modifier.fillMaxWidth()) {
-        listItems.forEach {item ->
-            val done = item.status == Status.Done
+        val toDoItems: List<ListItem> = listItems.filter { it.status == Status.Todo }
+        val completedItems: List<ListItem> = listItems.filter { it.status == Status.Done }
+        Text(
+            modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
+            text = "To Do",
+            style = MaterialTheme.typography.titleLarge
+        )
+        toDoItems.forEach {item ->
             ListItem(
                 headlineContent = {
-                    Text(
-                        text = item.label,
-                        textDecoration = if (done) { TextDecoration.LineThrough } else { TextDecoration.None }
-                    )
+                    Text(text = item.label)
                 },
                 leadingContent = {
                     IconToggleButton(
-                        checked = item.status == Status.Done,
+                        checked = false,
                         onCheckedChange = { viewModel.toggleItemStatus(item.id) }
                     ) {
-                        if (done) {
-                            Icon(Icons.Filled.Done, contentDescription = "Marked as done")
-                        } else {
-                            Icon(Icons.Outlined.CheckCircle, contentDescription = "Mark as done")
-                        }
+                       Icon(Icons.Outlined.CheckCircle, contentDescription = "Mark as done")
                     }
                 },
                 trailingContent = {
@@ -86,16 +96,41 @@ fun ToDoList(
         }
         TextField(
             modifier = modifier.fillMaxWidth(),
+            shape = RectangleShape,
             value = currentInput,
             maxLines = 1,
             onValueChange = { target: String -> viewModel.updateCurrentInput(target) },
             placeholder = { Text("New item") },
             leadingIcon = {
                 IconButton(
+                    modifier = modifier.absolutePadding(left = 16.dp),
                     onClick = { viewModel.handleDeselect() }
                 ) { Icon(Icons.Outlined.Add, contentDescription = "New list item icon") }
-            }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions( onDone = { viewModel.handleDeselect() })
         )
+        Text(
+            modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
+            text = "Done",
+            style = MaterialTheme.typography.titleLarge
+        )
+        completedItems.forEach {item ->
+            ListItem(
+                headlineContent = {
+                    Text(text = item.label, textDecoration = TextDecoration.LineThrough)
+                },
+                leadingContent = {
+                    IconToggleButton(
+                        checked = true,
+                        onCheckedChange = { viewModel.toggleItemStatus(item.id) }
+                    ) {
+                        Icon(Icons.Filled.CheckCircle, contentDescription = "Marked as done")
+                    }
+                },
+            )
+        }
+
     }
 }
 
