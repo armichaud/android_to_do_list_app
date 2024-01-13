@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.todolist.viewmodels.MainActivityViewModel
 import com.example.todolist.viewmodels.UiState
 
 @Composable
