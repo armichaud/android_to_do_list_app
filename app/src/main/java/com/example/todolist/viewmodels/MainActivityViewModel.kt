@@ -3,7 +3,6 @@ package com.example.todolist.viewmodels
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 enum class Status {
@@ -21,54 +20,67 @@ data class ListItem(
     var status: Status = Status.Todo,
 )
 
-class MainActivityViewModel: ViewModel() {
-    private val _listItems = MutableStateFlow(listOf<ListItem>())
-    val listItems: StateFlow<List<ListItem>> = _listItems.asStateFlow()
+data class UiState(
+    val listItems: List<ListItem>,
+    val currentInput: String,
+    val completedItemCount: Int,
+)
 
-    private val _currentInput = MutableStateFlow("")
-    val currentInput: StateFlow<String> = _currentInput.asStateFlow()
+class MainActivityViewModel: ViewModel() {
+    private val _uiState = MutableStateFlow(UiState(listItems = listOf(), currentInput =  "", completedItemCount = 0))
+    val uiState: StateFlow<UiState> = _uiState
 
     private var nextId = 0;
 
     fun updateCurrentInput(input: String) {
-        _currentInput.value = input
+        _uiState.update { it.copy(currentInput = input) }
     }
 
     private fun clearCurrentInput() {
-        _currentInput.value = ""
+        _uiState.update { it.copy(currentInput = "") }
     }
 
     private fun incrementId() {
         nextId += 1
     }
 
+    private fun sortListItems(listItems: List<ListItem>): List<ListItem> =
+        listItems.sortedBy { it.status.ordinal }
+
     private fun addListItem() {
-        _listItems.update { list ->
-            list + listOf(ListItem(id = nextId, label = _currentInput.value))
+        _uiState.update { currentState ->
+            val updatedList = currentState.listItems + listOf(ListItem(id = nextId, label = currentState.currentInput))
+            currentState.copy(listItems = sortListItems(updatedList))
         }
     }
 
     fun handleDeselect() {
-        addListItem()
-        clearCurrentInput()
-        incrementId()
+        if (_uiState.value.currentInput.isNotBlank()) {
+            addListItem()
+            clearCurrentInput()
+            incrementId()
+        }
     }
 
     fun removeListItem(id: Int) {
-        _listItems.update { list ->
-            list.filter { it.id != id }
+        _uiState.update { currentState ->
+            currentState.copy(listItems = currentState.listItems.filter { it.id != id })
         }
     }
 
     fun toggleItemStatus(id: Int) {
-        _listItems.update { list ->
-            list.map {
+        _uiState.update { currentState ->
+            var updatedCompletedItemCount = currentState.completedItemCount
+            val updatedList = currentState.listItems.map {
                 if (it.id == id) {
-                    it.copy(status = it.status.toggle())
+                    val updatedStatus = it.status.toggle()
+                    updatedCompletedItemCount += if (updatedStatus == Status.Todo) { -1 } else { 1 }
+                    it.copy(status = updatedStatus)
                 } else {
                     it
                 }
             }
+            currentState.copy(listItems = sortListItems(updatedList), completedItemCount = updatedCompletedItemCount)
         }
     }
 }
