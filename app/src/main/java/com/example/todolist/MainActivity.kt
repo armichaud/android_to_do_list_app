@@ -65,8 +65,7 @@ fun ToDoList(
     viewModel: MainActivityViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val itemCount = uiState.listItems.size
-    val toDoItemCount = itemCount - uiState.completedItemCount
+    val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
             Text(
@@ -104,7 +103,11 @@ fun ToDoList(
                         checked = done,
                         onCheckedChange = { viewModel.toggleItemStatus(item.id) }
                     ) {
-                       Icon(Icons.Outlined.CheckCircle, contentDescription = "Mark as done")
+                       if (done) {
+                           Icon(Icons.Filled.CheckCircle, contentDescription = "Marked as done")
+                       } else {
+                           Icon(Icons.Outlined.CheckCircle, contentDescription = "Mark as done")
+                       }
                     }
                 },
                 trailingContent = {

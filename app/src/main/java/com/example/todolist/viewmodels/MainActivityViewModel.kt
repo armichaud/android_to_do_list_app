@@ -44,10 +44,13 @@ class MainActivityViewModel: ViewModel() {
         nextId += 1
     }
 
+    private fun sortListItems(listItems: List<ListItem>): List<ListItem> =
+        listItems.sortedBy { it.status.ordinal }
+
     private fun addListItem() {
         _uiState.update { currentState ->
             val updatedList = currentState.listItems + listOf(ListItem(id = nextId, label = currentState.currentInput))
-            currentState.copy( listItems = updatedList)
+            currentState.copy(listItems = sortListItems(updatedList))
         }
     }
 
@@ -77,7 +80,7 @@ class MainActivityViewModel: ViewModel() {
                     it
                 }
             }
-            currentState.copy(listItems = updatedList, completedItemCount = updatedCompletedItemCount)
+            currentState.copy(listItems = sortListItems(updatedList), completedItemCount = updatedCompletedItemCount)
         }
     }
 }
