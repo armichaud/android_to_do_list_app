@@ -15,7 +15,7 @@ I occasionally used ChatGPT to ask general questions when searching the Android 
 - [x] Done items have text crossed out.
 - [x] Items can be deleted.
 - [ ] List items persist across sessions via device storage.
-- [ ] Custom icon on splash screen
+- [x] Custom icon on splash screen
 
 ## Implementation Goals
 - [ ] UI Implementation with Adapter + XML
