@@ -3,6 +3,6 @@
     <style name="Theme.ToDoList.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/purple_200</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
-        <item name="postSplashScreenTheme">@style/Theme.SplashScreen</item>
+        <item name="postSplashScreenTheme">@style/Theme.ToDoList</item>
     </style>
 </resources>
