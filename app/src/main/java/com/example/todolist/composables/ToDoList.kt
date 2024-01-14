@@ -1,8 +1,10 @@
 package com.example.todolist.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -18,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,12 +33,12 @@ import com.example.todolist.viewmodels.Status
 @Composable
 fun ToDoList(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.background,
+    innerPadding: PaddingValues = PaddingValues(0.dp),
     viewModel: MainActivityViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
-    LazyColumn(modifier = modifier.fillMaxWidth()) {
+    LazyColumn(modifier = modifier.fillMaxWidth().padding(innerPadding)) {
         item {
             Text(
                 modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
