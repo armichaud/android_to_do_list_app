@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.ToDoList.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/purple_200</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_checklist</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
         <item name="postSplashScreenTheme">@style/Theme.SplashScreen</item>
     </style>
 </resources>
