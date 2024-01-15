@@ -1,6 +1,10 @@
 package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -14,23 +18,33 @@ enum class Status {
     }
 }
 
+@Entity(
+    tableName = "list_item",
+    foreignKeys = [ForeignKey(
+        entity = ListItem::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("list_id")
+    )]
+)
 data class ListItem(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val label: String,
     var status: Status = Status.Todo,
+    @ColumnInfo(name = "list_id") val listId: Int
 )
 
 data class UiState(
+    val parentList: ToDoList?,
     val listItems: List<ListItem>,
     val currentInput: String,
     val completedItemCount: Int,
 )
 
 class ToDoListViewModel: ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(listItems = listOf(), currentInput =  "", completedItemCount = 0))
+    private val _uiState = MutableStateFlow(
+        UiState(parentList = null, listItems = listOf(), currentInput =  "", completedItemCount = 0)
+    )
     val uiState: StateFlow<UiState> = _uiState
-
-    private var nextId = 0;
 
     fun updateCurrentInput(input: String) {
         _uiState.update { it.copy(currentInput = input) }
@@ -40,17 +54,16 @@ class ToDoListViewModel: ViewModel() {
         _uiState.update { it.copy(currentInput = "") }
     }
 
-    private fun incrementId() {
-        nextId += 1
-    }
-
     private fun sortListItems(listItems: List<ListItem>): List<ListItem> =
         listItems.sortedBy { it.status.ordinal }
 
     private fun addListItem() {
         _uiState.update { currentState ->
-            val updatedList = currentState.listItems + listOf(ListItem(id = nextId, label = currentState.currentInput))
-            currentState.copy(listItems = sortListItems(updatedList))
+            currentState.parentList?.id?.let {
+                val updatedList = currentState.listItems +
+                        listOf(ListItem(label = currentState.currentInput, listId = it))
+                currentState.copy(listItems = sortListItems(updatedList))
+            } ?: currentState
         }
     }
 
@@ -58,7 +71,6 @@ class ToDoListViewModel: ViewModel() {
         if (_uiState.value.currentInput.isNotBlank()) {
             addListItem()
             clearCurrentInput()
-            incrementId()
         }
     }
 

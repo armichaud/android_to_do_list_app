@@ -1,11 +1,15 @@
 package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+@Entity(tableName = "to_do_list")
 data class ToDoList(
-    val id: Int,
+    @PrimaryKey val id: Int,
     val name: String
 )
 
