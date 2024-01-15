@@ -15,13 +15,13 @@ interface ListDao {
 
 @Dao
 interface ListItemDao {
-    @Query("SELECT * FROM list_item WHERE list_id == :listId ORDER BY status, id")
+    @Query("SELECT * FROM list_item WHERE list_id == :listId ORDER BY status DESC, id")
     fun getAllForList(listId: Int): List<ListItem>
 }
 
 
 @Database(entities = [List::class, ListItem::class], version = 1)
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabase: RoomDatabase() {
     abstract fun listDao(): ListDao
     abstract fun listItemDao(): ListItemDao
 }
