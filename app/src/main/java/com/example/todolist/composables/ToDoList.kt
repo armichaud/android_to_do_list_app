@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.ui.theme.ToDoListTheme
-import com.example.todolist.viewmodels.MainActivityViewModel
+import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.viewmodels.Status
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,7 +34,7 @@ import com.example.todolist.viewmodels.Status
 fun ToDoList(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues(0.dp),
-    viewModel: MainActivityViewModel = viewModel(),
+    viewModel: ToDoListViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
