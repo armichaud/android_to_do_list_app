@@ -43,7 +43,8 @@ fun ToDoList(
             Text(
                 modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
                 text = "To Do",
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
             )
         }
         if (toDoItemCount == 0) {
@@ -62,14 +63,16 @@ fun ToDoList(
                 Text(
                     modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
                     text = "Done",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
             ListItem(
                 modifier = modifier.animateItemPlacement(),
                 headlineContent = {
                     Text(
-                        text = item.label, textDecoration = if (done) {
+                        text = item.label,
+                        textDecoration = if (done) {
                             TextDecoration.LineThrough
                         } else {
                             TextDecoration.None

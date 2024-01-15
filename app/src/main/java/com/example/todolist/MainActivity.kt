@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                             title = { Text("To Do List") },
                             colors = topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                titleContentColor = MaterialTheme.colorScheme.primary
+                                titleContentColor = MaterialTheme.colorScheme.onPrimary
                             )
                         )
                     }
