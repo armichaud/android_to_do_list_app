@@ -50,6 +50,7 @@ dependencies {
     val lifecycleVersion = "2.7.0"
     val roomVersion = "2.6.1"
 
+    implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")

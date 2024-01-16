@@ -33,12 +33,12 @@ import com.example.todolist.viewmodels.Status
 @Composable
 fun ToDoList(
     modifier: Modifier = Modifier,
-    innerPadding: PaddingValues = PaddingValues(0.dp),
-    viewModel: ToDoListViewModel = viewModel(),
+    listId: Int,
 ) {
+    val viewModel = viewModel<ToDoListViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
-    LazyColumn(modifier = modifier.fillMaxWidth().padding(innerPadding)) {
+    LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
             Text(
                 modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
@@ -121,6 +121,6 @@ fun ToDoList(
 @Composable
 fun ToDoListPreview() {
     ToDoListTheme {
-        ToDoList()
+        ToDoList(listId = -1)
     }
 }
