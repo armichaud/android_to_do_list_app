@@ -5,9 +5,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.todolist.repositories.AppRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 enum class Status {
     Todo, Done;
@@ -40,11 +43,23 @@ data class UiState(
     val completedItemCount: Int,
 )
 
+@AndroidEntryPoint
 class ToDoListViewModel: ViewModel() {
+    @Inject lateinit var repository: AppRepository
+
     private val _uiState = MutableStateFlow(
         UiState(parentList = null, listItems = listOf(), currentInput =  "", completedItemCount = 0)
     )
     val uiState: StateFlow<UiState> = _uiState
+
+    fun loadListItems() {
+        _uiState.update { currentState ->
+            val listItems = currentState.parentList?.id?.let {id ->
+                repository.getListContents(id)
+            } ?: listOf()
+            currentState.copy(listItems = listItems)
+        }
+    }
 
     fun updateCurrentInput(input: String) {
         _uiState.update { it.copy(currentInput = input) }

@@ -13,19 +13,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.room.Room
 import com.example.todolist.composables.Main
-import com.example.todolist.composables.ToDoList
-import com.example.todolist.databases.AppDatabase
 import com.example.todolist.ui.theme.ToDoListTheme
 
+
+
 class MainActivity : ComponentActivity() {
-    private val db: AppDatabase = Room.databaseBuilder(
-        applicationContext,
-        AppDatabase::class.java, "database"
-    ).build()
-    val listDao = db.listDao()
-    val listItemDao = db.listItemDao()
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
