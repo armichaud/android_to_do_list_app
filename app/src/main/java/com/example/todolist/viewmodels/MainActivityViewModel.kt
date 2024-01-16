@@ -16,4 +16,8 @@ data class ToDoList(
 class MainActivityViewModel: ViewModel() {
     private val _lists = MutableStateFlow(listOf<ToDoList>())
     val lists: StateFlow<List<ToDoList>> = _lists
+
+    fun updateLists(lists: List<ToDoList>) {
+        _lists.value = lists
+    }
 }

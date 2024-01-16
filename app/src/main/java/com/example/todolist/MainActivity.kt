@@ -17,7 +17,7 @@ import com.example.todolist.databases.AppDatabase
 import com.example.todolist.ui.theme.ToDoListTheme
 
 class MainActivity : ComponentActivity() {
-    val db: AppDatabase = Room.databaseBuilder(
+    private val db: AppDatabase = Room.databaseBuilder(
         applicationContext,
         AppDatabase::class.java, "database"
     ).build()
