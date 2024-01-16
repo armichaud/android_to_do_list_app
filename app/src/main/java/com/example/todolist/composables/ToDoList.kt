@@ -28,15 +28,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.viewmodels.Status
+import com.example.todolist.viewmodels.ToDoList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoList(
     modifier: Modifier = Modifier,
-    listId: Int,
+    parentListId: Int,
 ) {
     val viewModel = viewModel<ToDoListViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.setParentListId(parentListId)
+
+    viewModel.loadListItems()
+
     val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
@@ -121,6 +126,6 @@ fun ToDoList(
 @Composable
 fun ToDoListPreview() {
     ToDoListTheme {
-        ToDoList(listId = -1)
+        ToDoList(parentListId = -1)
     }
 }

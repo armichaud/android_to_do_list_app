@@ -37,7 +37,7 @@ data class ListItem(
 )
 
 data class UiState(
-    val parentList: ToDoList?,
+    val parentListId: Int,
     val listItems: List<ListItem>,
     val currentInput: String,
     val completedItemCount: Int,
@@ -48,16 +48,13 @@ class ToDoListViewModel: ViewModel() {
     @Inject lateinit var repository: AppRepository
 
     private val _uiState = MutableStateFlow(
-        UiState(parentList = null, listItems = listOf(), currentInput =  "", completedItemCount = 0)
+        UiState(parentListId = -1, listItems = listOf(), currentInput =  "", completedItemCount = 0)
     )
     val uiState: StateFlow<UiState> = _uiState
 
     fun loadListItems() {
         _uiState.update { currentState ->
-            val listItems = currentState.parentList?.id?.let {id ->
-                repository.getListContents(id)
-            } ?: listOf()
-            currentState.copy(listItems = listItems)
+            currentState.copy(listItems = repository.getListContents(currentState.parentListId))
         }
     }
 
@@ -74,11 +71,8 @@ class ToDoListViewModel: ViewModel() {
 
     private fun addListItem() {
         _uiState.update { currentState ->
-            currentState.parentList?.id?.let {
-                val updatedList = currentState.listItems +
-                        listOf(ListItem(label = currentState.currentInput, listId = it))
-                currentState.copy(listItems = sortListItems(updatedList))
-            } ?: currentState
+            val updatedList = currentState.listItems + listOf(ListItem(label = currentState.currentInput, listId = currentState.parentListId))
+            currentState.copy(listItems = sortListItems(updatedList))
         }
     }
 
@@ -109,5 +103,9 @@ class ToDoListViewModel: ViewModel() {
             }
             currentState.copy(listItems = sortListItems(updatedList), completedItemCount = updatedCompletedItemCount)
         }
+    }
+
+    fun setParentListId(parentListId: Int) {
+        _uiState.update { it.copy(parentListId = parentListId) }
     }
 }

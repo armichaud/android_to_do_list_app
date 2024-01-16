@@ -17,6 +17,6 @@ fun AppNavHost(navController: NavHostController) {
             "list/{listId}",
             arguments = listOf(navArgument(LIST_ID_KEY) { type = NavType.IntType })
         ) { navBackStackEntry -> navBackStackEntry.arguments?.getInt(LIST_ID_KEY)
-            ?.let { ToDoList(listId = it) } }
+            ?.let { ToDoList(parentListId = it) } }
     }
 }
