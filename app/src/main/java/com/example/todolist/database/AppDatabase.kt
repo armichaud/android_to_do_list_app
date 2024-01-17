@@ -11,11 +11,10 @@ import com.example.todolist.viewmodels.ToDoList
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
-@Database(entities = [List::class, ListItem::class], version = 1)
+@Database(entities = [ToDoList::class, ListItem::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun listDao(): ListDao
     abstract fun listItemDao(): ListItemDao
