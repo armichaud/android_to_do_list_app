@@ -1,10 +1,8 @@
 package com.example.todolist.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -24,11 +22,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.viewmodels.Status
-import com.example.todolist.viewmodels.ToDoList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -36,7 +32,7 @@ fun ToDoList(
     modifier: Modifier = Modifier,
     parentListId: Int,
 ) {
-    val viewModel = viewModel<ToDoListViewModel>()
+    lateinit var viewModel: ToDoListViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.setParentListId(parentListId)
 

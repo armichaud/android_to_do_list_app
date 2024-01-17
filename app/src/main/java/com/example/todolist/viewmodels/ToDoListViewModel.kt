@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.example.todolist.repositories.AppRepository
-import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -43,9 +43,8 @@ data class UiState(
     val completedItemCount: Int,
 )
 
-@AndroidEntryPoint
-class ToDoListViewModel: ViewModel() {
-    @Inject lateinit var repository: AppRepository
+@HiltViewModel
+class ToDoListViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
 
     private val _uiState = MutableStateFlow(
         UiState(parentListId = -1, listItems = listOf(), currentInput =  "", completedItemCount = 0)

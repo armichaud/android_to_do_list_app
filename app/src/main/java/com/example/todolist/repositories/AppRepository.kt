@@ -1,5 +1,6 @@
 package com.example.todolist.repositories
 
+import android.content.Context
 import android.content.ContextWrapper
 import androidx.room.Dao
 import androidx.room.Database
@@ -8,6 +9,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.todolist.viewmodels.ListItem
 import com.example.todolist.viewmodels.ToDoList
+import javax.inject.Inject
 
 @Dao
 interface ListDao {
@@ -29,17 +31,20 @@ abstract class AppDatabase: RoomDatabase() {
 }
 
 
-class AppRepository(applicationContext: ContextWrapper) {
-    private val db: AppDatabase = Room.databaseBuilder(
-        applicationContext,
-        AppDatabase::class.java, "database"
-    ).build()
+class AppRepository @Inject constructor() {
+    private lateinit var db: AppDatabase
     private val listDao = db.listDao()
     private val listItemDao = db.listItemDao()
 
-    fun getLists(): List<ToDoList> =
-        listDao.getAll()
+    fun initDb(applicationContext: Context) {
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "database"
+        ).build()
+    }
 
+    fun getLists(): List<ToDoList> = listOf(ToDoList(1, "First List"), ToDoList(2, "Second List"))
+        // listDao.getAll()
 
     fun getListContents(listId: Int): List<ListItem> =
         listItemDao.getAllForList(listId = listId)
