@@ -1,7 +1,6 @@
 package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.todolist.repositories.AppRepository
@@ -28,5 +27,9 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
 
     fun updateLists(lists: List<ToDoList>) {
         _lists.value = lists
+    }
+
+    fun createList(): Int {
+
     }
 }

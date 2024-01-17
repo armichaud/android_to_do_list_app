@@ -35,13 +35,18 @@ object DataBaseModule {
 }
 
 @Dao
+interface ListDao {
+    @Query("SELECT * FROM to_do_list")
+    fun getAll(): List<ToDoList>
+
+    @Query("INSERT INTO to_do_list (name) VALUES (:name)")
+    fun addList(name: String)
+
+}
+
+@Dao
 interface ListItemDao {
     @Query("SELECT * FROM list_item WHERE list_id == :listId ORDER BY status DESC, id")
     fun getAllForList(listId: Int): List<ListItem>
 }
 
-@Dao
-interface ListDao {
-    @Query("SELECT * FROM to_do_list")
-    fun getAll(): List<ToDoList>
-}
