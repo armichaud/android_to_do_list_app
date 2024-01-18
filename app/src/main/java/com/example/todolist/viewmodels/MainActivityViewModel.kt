@@ -47,7 +47,9 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
     }
 
     fun newList() {
-        viewModelScope.launch { repository.newList(_uiState.value.newListInput) }
-        clearInput()
+        viewModelScope.launch {
+            repository.newList(_uiState.value.newListInput)
+            clearInput()
+        }
     }
 }

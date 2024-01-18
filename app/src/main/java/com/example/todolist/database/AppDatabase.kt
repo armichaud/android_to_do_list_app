@@ -31,10 +31,15 @@ object DataBaseModule {
     fun provideDatabase(
         @ApplicationContext applicationContext: Context
     ): AppDatabase  {
-        return Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "database"
-        ).build()
+        return Room
+            .databaseBuilder(
+                applicationContext,
+                AppDatabase::class.java, "database"
+            )
+            // I might go back at some point and change everything to LiveData,
+            // but this is fine for the MVP
+            .allowMainThreadQueries()
+            .build()
     }
 }
 
