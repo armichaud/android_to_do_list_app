@@ -29,7 +29,5 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
         _lists.value = lists
     }
 
-    fun createList(): Int {
-
-    }
+    fun createList() {}
 }
