@@ -9,16 +9,25 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 
 const val LIST_ID_KEY = "listId"
+const val LIST_NAME_KEY = "listName"
 const val LIST_ROUTE = "list/"
 
 @Composable
 fun Navigation(navController: NavHostController = rememberNavController()) {
     NavHost(startDestination = "main", navController = navController) {
-        composable("main") { Home() { listId: Int -> navController.navigate("$LIST_ROUTE/{$listId}") } }
+        composable("main") { Home() { listId: Int, listName: String -> navController.navigate("$LIST_ROUTE/{$listName}/{$listId}") } }
         composable(
-            "$LIST_ROUTE/{$LIST_ID_KEY}",
+            "$LIST_ROUTE/{$LIST_NAME_KEY}/{$LIST_ID_KEY}",
             arguments = listOf(navArgument(LIST_ID_KEY) { type = NavType.IntType })
-        ) { navBackStackEntry -> navBackStackEntry.arguments?.getInt(LIST_ID_KEY)
-            ?.let { ToDoList(parentListId = it) } }
+        ) { navBackStackEntry ->
+            val args = navBackStackEntry.arguments
+            val parentListId = args?.getInt(LIST_ID_KEY)
+            val parentListName = args?.getString(LIST_NAME_KEY)
+            parentListId?.let {
+                if (parentListName != null) {
+                    ToDoList(parentListId = it, parentListName = parentListName)
+                }
+            }
+        }
     }
 }

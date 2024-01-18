@@ -10,8 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -40,7 +38,8 @@ data class ListItem(
 )
 
 data class UiState(
-    val parentList: ToDoList?,
+    val parentListId: Int,
+    val parentListName: String,
     val currentInput: String,
     val completedItemCount: Int,
 )
@@ -49,15 +48,12 @@ data class UiState(
 class ToDoListViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        UiState(parentList = null, currentInput =  "", completedItemCount = 0)
+        UiState(parentListId = -1, parentListName = "", currentInput =  "", completedItemCount = 0)
     )
     val uiState: StateFlow<UiState> = _uiState
 
-    val listItems: Flow<List<ListItem>> = _uiState.value.parentList?.id?.let {
-        repository.getListContents(
-            it
-        )
-    } ?: emptyFlow()
+    val listItems: Flow<List<ListItem>> =
+        repository.getListContents(_uiState.value.parentListId)
 
     fun updateCurrentInput(input: String) {
         _uiState.update { it.copy(currentInput = input) }
@@ -73,11 +69,8 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
     private fun addListItem() {
         val currentState = _uiState.value
         if (currentState.currentInput.isNotBlank()) {
-            currentState.parentList?.id?.let {id ->
-                repository.addListItem(ListItem(label = currentState.currentInput, listId = id))
-            }
+            repository.addListItem(ListItem(label = currentState.currentInput, listId = currentState.parentListId))
         }
-
     }
 
     fun handleDeselect() {
@@ -99,7 +92,7 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
         repository.updateListItemStatus(item.id, updatedStatus)
     }
 
-    fun setParentList(parentList: ToDoList) {
-        _uiState.update { it.copy(parentList = parentList) }
+    fun setParentList(parentListId: Int, parentListName: String) {
+        _uiState.update { it.copy(parentListId = parentListId, parentListName = parentListName) }
     }
 }

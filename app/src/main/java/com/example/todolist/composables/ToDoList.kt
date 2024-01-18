@@ -25,17 +25,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.viewmodels.Status
-import com.example.todolist.viewmodels.ToDoList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoList(
     modifier: Modifier = Modifier,
-    parentList: ToDoList
+    parentListId: Int,
+    parentListName: String
 ) {
     lateinit var viewModel: ToDoListViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    viewModel.setParentList(parentList)
+    viewModel.setParentList(parentListId, parentListName)
 
     val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
 
@@ -123,6 +123,6 @@ fun ToDoList(
 @Composable
 fun ToDoListPreview() {
     ToDoListTheme {
-        ToDoList(parentList = ToDoList(id = -1, name = "Preview To Do List"))
+        ToDoList(parentListId = -1, parentListName = "Preview To Do List")
     }
 }

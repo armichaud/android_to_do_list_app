@@ -28,8 +28,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.viewmodels.MainActivityViewModel
 
 @Composable
-fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int) -> Unit) {
-
+fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int, String) -> Unit) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
 
     Box {
@@ -47,11 +47,14 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int) -> 
             onDismissRequest = { /*Todo*/ }
         ) {
             Card(
-                modifier = Modifier.fillMaxWidth().height(375.dp).padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(375.dp)
+                    .padding(16.dp),
                 shape = RoundedCornerShape(16.dp),
             ) {
                 Text("Give your list a name")
-                TextField(value = "TODO", onValueChange = {})
+                TextField(value = uiState.newListInput, onValueChange = { viewModel.updateNewListInput(it) })
                 LazyRow {
                     item {
                         TextButton(onClick = {
@@ -63,7 +66,7 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int) -> 
                     item{
                         TextButton(onClick = {
                             viewModel.newList()
-                            openList(-1)
+                            openList(-1, "") // TODO
                         }) {
                             Text("Add")
                         }
@@ -78,5 +81,5 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int) -> 
 @Preview
 @Composable
 fun MainPreview() {
-    Home {}
+    Home { _, _ -> {} }
 }
