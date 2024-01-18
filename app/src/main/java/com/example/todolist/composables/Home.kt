@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.viewmodels.MainActivityViewModel
 
 @Composable
@@ -33,49 +34,53 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int, Str
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
 
     Box {
+        ExtendedFloatingActionButton(
+                onClick = { viewModel.openDialog() },
+                icon = { Icon(Icons.Filled.Edit, "Create new to-do list.") },
+                text = { Text(text = "New List") }
+        )
         LazyColumn {
             items(lists) {
                 ListItem(headlineContent = { Text(it.name) })
             }
         }
-        ExtendedFloatingActionButton(
-            onClick = { /*Todo*/ },
-            icon = { Icon(Icons.Filled.Edit, "Create new to-do list.") },
-            text = { Text(text = "New List") },
-        )
-        Dialog(
-            onDismissRequest = { /*Todo*/ }
-        ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(375.dp)
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp),
-            ) {
-                Text("Give your list a name")
-                TextField(value = uiState.newListInput, onValueChange = { viewModel.updateNewListInput(it) })
-                LazyRow {
-                    item {
-                        TextButton(onClick = {
-                            // TODO Close dialog
-                        }) {
-                            Text("Cancel")
-                        }
-                    }
-                    item{
-                        TextButton(onClick = {
-                            viewModel.newList()
-                            openList(-1, "") // TODO
-                        }) {
-                            Text("Add")
+        when {
+            uiState.dialogOpen ->
+                Dialog(
+                    onDismissRequest = { viewModel.closeDialog() }
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(375.dp)
+                            .padding(16.dp),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Text("Give your list a name")
+                        TextField(
+                            value = uiState.newListInput,
+                            onValueChange = { viewModel.updateNewListInput(it) })
+                        LazyRow {
+                            item {
+                                TextButton(onClick = {
+                                    viewModel.closeDialog()
+                                }) {
+                                    Text("Cancel")
+                                }
+                            }
+                            item {
+                                TextButton(onClick = {
+                                    viewModel.newList()
+                                    openList(-1, "") // TODO
+                                }) {
+                                    Text("Add")
+                                }
+                            }
                         }
                     }
                 }
-            }
         }
     }
-
 }
 
 @Preview
