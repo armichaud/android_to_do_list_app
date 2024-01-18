@@ -25,20 +25,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.viewmodels.Status
+import com.example.todolist.viewmodels.ToDoList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoList(
     modifier: Modifier = Modifier,
-    parentListId: Int,
+    parentList: ToDoList
 ) {
     lateinit var viewModel: ToDoListViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    viewModel.setParentListId(parentListId)
+    viewModel.setParentList(parentList)
 
-    viewModel.loadListItems()
+    val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
 
-    val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
+    val toDoItemCount = listItems.size - uiState.completedItemCount
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
             Text(
@@ -58,7 +59,7 @@ fun ToDoList(
                 )
             }
         }
-        itemsIndexed(uiState.listItems, key = { index, item -> item.id }) { index, item ->
+        itemsIndexed(listItems, key = { _, item -> item.id }) { index, item ->
             val done = item.status == Status.Done
             if (uiState.completedItemCount > 0 && index == toDoItemCount) {
                 Text(
@@ -83,7 +84,7 @@ fun ToDoList(
                 leadingContent = {
                     IconToggleButton(
                         checked = done,
-                        onCheckedChange = { viewModel.toggleItemStatus(item.id) }
+                        onCheckedChange = { viewModel.toggleItemStatus(item) }
                     ) {
                         if (done) {
                             Icon(Icons.Filled.CheckCircle, contentDescription = "Marked as done")
@@ -122,6 +123,6 @@ fun ToDoList(
 @Composable
 fun ToDoListPreview() {
     ToDoListTheme {
-        ToDoList(parentListId = -1)
+        ToDoList(parentList = ToDoList(id = -1, name = "Preview To Do List"))
     }
 }

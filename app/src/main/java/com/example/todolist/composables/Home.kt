@@ -30,8 +30,7 @@ import com.example.todolist.viewmodels.MainActivityViewModel
 @Composable
 fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int) -> Unit) {
 
-    val lists by viewModel.lists.collectAsStateWithLifecycle()
-    viewModel.loadLists()
+    val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
 
     Box {
         LazyColumn {
@@ -63,7 +62,7 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int) -> 
                     }
                     item{
                         TextButton(onClick = {
-                            // TODO Return after creating list
+                            viewModel.newList()
                             openList(-1)
                         }) {
                             Text("Add")

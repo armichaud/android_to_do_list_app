@@ -5,29 +5,23 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.todolist.repositories.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @Entity(tableName = "to_do_list")
 data class ToDoList(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Int = 0,
     val name: String
+)
+
+data class HomeUiState (
+    val newListInput: String
 )
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
+    val lists = repository.getLists()
 
-    private val _lists = MutableStateFlow(listOf<ToDoList>())
-    val lists: StateFlow<List<ToDoList>> = _lists
-
-    fun loadLists() {
-        _lists.value = repository.getLists()
+    fun newList(name: String) {
+        repository.newList(name)
     }
-
-    fun updateLists(lists: List<ToDoList>) {
-        _lists.value = lists
-    }
-
-    fun createList() {}
 }
