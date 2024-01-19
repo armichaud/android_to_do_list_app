@@ -6,9 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,9 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -92,8 +88,8 @@ class MainActivity: ComponentActivity() {
                                         shape = RoundedCornerShape(16.dp),
                                     ) {
                                         Text(modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(16.dp),
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
                                             text = "Create a new list",
                                             textAlign = TextAlign.Center,
                                             style = MaterialTheme.typography.titleLarge,
@@ -106,7 +102,9 @@ class MainActivity: ComponentActivity() {
                                             label = { Text("List Name") }
                                         )
                                         LazyRow(
-                                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
                                             horizontalArrangement = Arrangement.SpaceEvenly
                                         ) {
                                             item {
@@ -119,7 +117,6 @@ class MainActivity: ComponentActivity() {
                                             item {
                                                 TextButton(onClick = {
                                                     viewModel.newList(
-                                                        updateTitle = { newTile -> viewModel.updateTitle(newTile) },
                                                         navigate = { listId: Long -> navController.navigate("$LIST_ROUTE/$listId") }
                                                     )
                                                 }) {

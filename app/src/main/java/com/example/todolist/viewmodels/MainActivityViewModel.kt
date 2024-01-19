@@ -16,7 +16,6 @@ const val DEFAULT_TITLE = "To Do Lists"
 data class MainActivityUiState (
     val newListInput: String,
     val dialogOpen: Boolean = false,
-    val selectedList: ToDoList? = null,
     val title: String = DEFAULT_TITLE
 )
 
@@ -28,10 +27,8 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
     val uiState: StateFlow<MainActivityUiState> = _uiState
 
 
-    fun updateTitle(title: String? = DEFAULT_TITLE) {
-        if (title != null) {
-            _uiState.update { it.copy(title = title) }
-        }
+    fun updateTitle(title: String = DEFAULT_TITLE) {
+        _uiState.update { it.copy(title = title) }
     }
 
     fun updateNewListInput(newInput: String) {
@@ -50,7 +47,7 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
         _uiState.update { it.copy(newListInput = "") }
     }
 
-    fun newList(updateTitle: (String) -> Unit, navigate: (Long) -> Unit) {
+    fun newList(navigate: (Long) -> Unit) {
         viewModelScope.launch {
             val name = _uiState.value.newListInput
             val id = repository.newList(name)

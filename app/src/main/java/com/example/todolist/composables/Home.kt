@@ -1,6 +1,7 @@
 package com.example.todolist.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -26,7 +27,15 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), navigateTo: (Int) -
         items(lists) {
             ListItem(
                 modifier = Modifier.animateItemPlacement(),
-                headlineContent = { TextButton(onClick = { navigateTo(it.id) }) { Text(it.name) } },
+                headlineContent = {
+                    TextButton(
+                        onClick = {
+                            viewModel.updateTitle(it.name)
+                            navigateTo(it.id)
+                        }
+                    ) {
+                        Text(it.name)
+                    } },
                 trailingContent = {
                     IconButton(
                         onClick = { viewModel.deleteList(it.id) }
