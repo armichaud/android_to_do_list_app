@@ -36,8 +36,7 @@ fun ToDoList(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.setParentList(parentListId)
-    val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
-    val toDoItemCount = listItems.size - uiState.completedItemCount
+    val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
 
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
@@ -58,7 +57,7 @@ fun ToDoList(
                 )
             }
         }
-        itemsIndexed(listItems, key = { _, item -> item.id }) { index, item ->
+        itemsIndexed(uiState.listItems, key = { _, item -> item.id }) { index, item ->
             val done = item.status == Status.Done
             if (uiState.completedItemCount > 0 && index == toDoItemCount) {
                 Text(

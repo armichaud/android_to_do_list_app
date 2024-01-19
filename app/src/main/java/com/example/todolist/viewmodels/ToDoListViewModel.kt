@@ -17,18 +17,21 @@ data class UiState(
     val parentListId: Int,
     val currentInput: String,
     val completedItemCount: Int,
+    val listItems: List<ListItem> = emptyList()
 )
 
 @HiltViewModel
 class ToDoListViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
-
     private val _uiState = MutableStateFlow(
         UiState(parentListId = -1, currentInput =  "", completedItemCount = 0)
     )
     val uiState: StateFlow<UiState> = _uiState
 
-    val listItems: Flow<List<ListItem>> =
-        repository.getListContents(_uiState.value.parentListId)
+    private fun updateListContents() {
+        _uiState.update {
+            it.copy(listItems = repository.getListContents(_uiState.value.parentListId))
+        }
+    }
 
     fun updateCurrentInput(input: String) {
         _uiState.update { it.copy(currentInput = input) }
@@ -73,5 +76,6 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
 
     fun setParentList(parentListId: Int) {
         _uiState.update { it.copy(parentListId = parentListId) }
+        updateListContents()
     }
 }
