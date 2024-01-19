@@ -21,21 +21,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.utils.Status
+import com.example.todolist.viewmodels.MainActivityViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoList(
-    modifier: Modifier = Modifier,
     parentListId: Int,
-    parentListName: String
+    modifier: Modifier = Modifier,
+    viewModel: ToDoListViewModel = hiltViewModel()
 ) {
-    lateinit var viewModel: ToDoListViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    viewModel.setParentList(parentListId, parentListName)
+    viewModel.setParentList(parentListId)
 
     val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
 
@@ -44,7 +45,7 @@ fun ToDoList(
         item {
             Text(
                 modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
-                text = "To Do",
+                text = uiState.parentListName,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -123,6 +124,6 @@ fun ToDoList(
 @Composable
 fun ToDoListPreview() {
     ToDoListTheme {
-        ToDoList(parentListId = -1, parentListName = "Preview To Do List")
+        ToDoList(parentListId = -1)
     }
 }

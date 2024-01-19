@@ -40,16 +40,13 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
         _uiState.update { it.copy(newListInput = "") }
     }
 
-    fun newList() {
+    fun newList(callback: (Long) -> Unit) {
         viewModelScope.launch {
             val id = repository.newList(_uiState.value.newListInput)
             clearInput()
-            setSelectedList(id)
+            closeDialog()
+            callback(id)
         }
     }
 
-    private fun setSelectedList(id: Long) {
-        val listToLoad = repository.getList(id)
-        _uiState.update { it.copy(selectedList = listToLoad) }
-    }
 }

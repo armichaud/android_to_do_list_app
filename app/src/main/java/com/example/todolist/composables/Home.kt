@@ -29,7 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.viewmodels.MainActivityViewModel
 
 @Composable
-fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int, String) -> Unit) {
+fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Long) -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
 
@@ -70,11 +70,7 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int, Str
                             }
                             item {
                                 TextButton(onClick = {
-                                    val id = viewModel.newList()
-                                    val listToLoad = uiState.selectedList
-                                    listToLoad?.let {
-                                        openList(it.id, it.name)
-                                    }
+                                    val id = viewModel.newList(openList)
                                 }) {
                                     Text("Add")
                                 }
@@ -89,5 +85,5 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int, Str
 @Preview
 @Composable
 fun MainPreview() {
-    Home { _, _ -> {} }
+    Home { _ -> {} }
 }

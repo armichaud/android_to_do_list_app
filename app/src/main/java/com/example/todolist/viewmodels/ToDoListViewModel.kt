@@ -1,6 +1,7 @@
 package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.todolist.models.ListItem
 import com.example.todolist.repositories.AppRepository
 import com.example.todolist.utils.Status
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class UiState(
@@ -43,7 +45,9 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
     private fun addListItem() {
         val currentState = _uiState.value
         if (currentState.currentInput.isNotBlank()) {
-            repository.addListItem(ListItem(label = currentState.currentInput, listId = currentState.parentListId))
+            viewModelScope.launch {
+                repository.addListItem(ListItem(label = currentState.currentInput, listId = currentState.parentListId))
+            }
         }
     }
 
@@ -55,7 +59,9 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
     }
 
     fun removeListItem(id: Int) {
-        repository.deleteListItemById(id)
+        viewModelScope.launch {
+            repository.deleteListItemById(id)
+        }
     }
     fun toggleItemStatus(item: ListItem) {
         val currentState = _uiState.value
@@ -63,10 +69,15 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
         val updatedStatus = item.status.toggle()
         updatedCompletedItemCount += if (updatedStatus == Status.Todo) { -1 } else { 1 }
         _uiState.update { it.copy(completedItemCount = updatedCompletedItemCount) }
-        repository.updateListItemStatus(item.id, updatedStatus)
+        viewModelScope.launch {
+            repository.updateListItemStatus(item.id, updatedStatus)
+        }
     }
 
-    fun setParentList(parentListId: Int, parentListName: String) {
-        _uiState.update { it.copy(parentListId = parentListId, parentListName = parentListName) }
+    fun setParentList(parentListId: Int) {
+        viewModelScope.launch {
+            val parentList = repository.getList(parentListId.toLong())
+            _uiState.update { it.copy(parentListId = parentListId, parentListName = parentList.name) }
+        }
     }
 }
