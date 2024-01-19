@@ -26,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.utils.Status
-import com.example.todolist.viewmodels.MainActivityViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,7 +44,7 @@ fun ToDoList(
         item {
             Text(
                 modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
-                text = uiState.parentListName,
+                text = "To Do",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )

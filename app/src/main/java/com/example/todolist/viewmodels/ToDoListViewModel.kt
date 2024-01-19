@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 data class UiState(
     val parentListId: Int,
-    val parentListName: String,
     val currentInput: String,
     val completedItemCount: Int,
 )
@@ -24,7 +23,7 @@ data class UiState(
 class ToDoListViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        UiState(parentListId = -1, parentListName = "", currentInput =  "", completedItemCount = 0)
+        UiState(parentListId = -1, currentInput =  "", completedItemCount = 0)
     )
     val uiState: StateFlow<UiState> = _uiState
 
@@ -75,9 +74,6 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
     }
 
     fun setParentList(parentListId: Int) {
-        viewModelScope.launch {
-            val parentList = repository.getList(parentListId.toLong())
-            _uiState.update { it.copy(parentListId = parentListId, parentListName = parentList.name) }
-        }
+        _uiState.update { it.copy(parentListId = parentListId) }
     }
 }

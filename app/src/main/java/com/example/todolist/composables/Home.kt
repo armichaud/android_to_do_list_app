@@ -25,11 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todolist.viewmodels.MainActivityViewModel
+import com.example.todolist.viewmodels.HomeViewModel
 
 @Composable
-fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Long) -> Unit) {
+fun Home(viewModel: HomeViewModel = hiltViewModel(), updateTitle: (String) -> Unit, navigate: (Long) -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
 
@@ -70,7 +69,7 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Long) ->
                             }
                             item {
                                 TextButton(onClick = {
-                                    val id = viewModel.newList(openList)
+                                    viewModel.newList(updateTitle = updateTitle, navigate = navigate)
                                 }) {
                                     Text("Add")
                                 }
@@ -85,5 +84,5 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Long) ->
 @Preview
 @Composable
 fun MainPreview() {
-    Home { _ -> {} }
+    Home(updateTitle = {}, navigate = {})
 }

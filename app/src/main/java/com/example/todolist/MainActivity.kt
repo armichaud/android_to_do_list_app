@@ -1,7 +1,5 @@
 package com.example.todolist
 
-import android.content.Context
-import android.content.ContextWrapper
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,22 +11,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.composables.Navigation
-import com.example.todolist.database.DataBaseModule
-import com.example.todolist.repositories.AppRepository
 import com.example.todolist.ui.theme.ToDoListTheme
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
+import com.example.todolist.viewmodels.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.components.ActivityComponent
-import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
-class MainActivity () : ComponentActivity() {
+class MainActivity (): ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +30,14 @@ class MainActivity () : ComponentActivity() {
         installSplashScreen()
 
         setContent {
+
             ToDoListTheme {
+                val viewModel: MainActivityViewModel = hiltViewModel()
+                val title by viewModel.title.collectAsStateWithLifecycle()
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("To Do List") },
+                            title = { Text(title) },
                             colors = topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -48,7 +45,7 @@ class MainActivity () : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) { Navigation() }
+                    Box(modifier = Modifier.padding(innerPadding)) { Navigation { newTile -> viewModel.updateTitle(newTile) } }
                 }
             }
         }
