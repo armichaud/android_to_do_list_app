@@ -1,5 +1,6 @@
 package com.example.todolist.composables
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,11 +35,16 @@ fun ToDoList(
     modifier: Modifier = Modifier,
     viewModel: ToDoListViewModel = hiltViewModel(
         creationCallback = { factory: ToDoListViewModel.ToDoListViewModelFactory -> factory.create(parentListId) }
-    )
+    ),
+    returnToMain: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
     val toDoItemCount = listItems.size - uiState.completedItemCount
+
+    BackHandler(enabled = true) {
+        returnToMain()
+    }
 
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
@@ -123,6 +129,6 @@ fun ToDoList(
 @Composable
 fun ToDoListPreview() {
     ToDoListTheme {
-        ToDoList(parentListId = -1)
+        ToDoList(parentListId = -1) {}
     }
 }

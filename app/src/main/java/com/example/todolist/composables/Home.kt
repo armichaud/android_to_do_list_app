@@ -20,7 +20,7 @@ import com.example.todolist.viewmodels.HomeViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Home(viewModel: HomeViewModel = hiltViewModel(), goToList: (Int, String) -> Unit) {
+fun Home(viewModel: HomeViewModel = hiltViewModel(), updateTitle: (String) -> Unit, goToList: (Int) -> Unit) {
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
     LazyColumn {
         items(lists) {
@@ -29,7 +29,8 @@ fun Home(viewModel: HomeViewModel = hiltViewModel(), goToList: (Int, String) -> 
                 headlineContent = {
                     TextButton(
                         onClick = {
-                            goToList(it.id, it.name)
+                            updateTitle(it.name)
+                            goToList(it.id)
                         }
                     ) {
                         Text(it.name)
@@ -47,5 +48,5 @@ fun Home(viewModel: HomeViewModel = hiltViewModel(), goToList: (Int, String) -> 
 @Preview
 @Composable
 fun MainPreview() {
-    Home { _, _ -> }
+    Home(updateTitle = {}, goToList = {})
 }
