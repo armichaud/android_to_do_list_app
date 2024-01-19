@@ -40,6 +40,7 @@ fun ToDoList(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
+    viewModel.updateCompletedItemCount(listItems.count { it.status == Status.Done })
     val toDoItemCount = listItems.size - uiState.completedItemCount
 
     BackHandler(enabled = true) {

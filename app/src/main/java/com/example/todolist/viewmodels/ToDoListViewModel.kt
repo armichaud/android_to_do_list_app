@@ -11,6 +11,8 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -29,20 +31,7 @@ class ToDoListViewModel @AssistedInject constructor(
         fun create(parentListId: Int): ToDoListViewModel
     }
 
-    // State
-    private val _uiState = MutableStateFlow(UiState(currentInput =  "", completedItemCount = 0))
-    val uiState: StateFlow<UiState> = _uiState
-
-    fun updateCurrentInput(input: String) =  _uiState.update { it.copy(currentInput = input) }
-    private fun clearCurrentInput() = _uiState.update { it.copy(currentInput = "") }
-    fun handleNewInput() {
-        if (_uiState.value.currentInput.isNotBlank()) {
-            addListItem()
-            clearCurrentInput()
-        }
-    }
-
-    // Querying
+    // Data fetching
     val listItems = repository.getListContents(parentListId)
 
     private fun addListItem() {
@@ -62,9 +51,23 @@ class ToDoListViewModel @AssistedInject constructor(
         var updatedCompletedItemCount = currentState.completedItemCount
         val updatedStatus = item.status.toggle()
         updatedCompletedItemCount += if (updatedStatus == Status.Todo) { -1 } else { 1 }
-        _uiState.update { it.copy(completedItemCount = updatedCompletedItemCount) }
+        updateCompletedItemCount(updatedCompletedItemCount)
         viewModelScope.launch {
             repository.updateListItemStatus(item.id, updatedStatus)
+        }
+    }
+
+    // State
+    private val _uiState = MutableStateFlow(UiState(currentInput =  "", completedItemCount = 0))
+    val uiState: StateFlow<UiState> = _uiState
+
+    fun updateCurrentInput(input: String) =  _uiState.update { it.copy(currentInput = input) }
+    private fun clearCurrentInput() = _uiState.update { it.copy(currentInput = "") }
+    fun updateCompletedItemCount(updatedCount: Int) = _uiState.update { it.copy(completedItemCount = updatedCount) }
+    fun handleNewInput() {
+        if (_uiState.value.currentInput.isNotBlank()) {
+            addListItem()
+            clearCurrentInput()
         }
     }
 }
