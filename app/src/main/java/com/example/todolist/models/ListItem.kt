@@ -9,7 +9,7 @@ import com.example.todolist.utils.Status
 @Entity(
     tableName = "list_item",
     foreignKeys = [ForeignKey(
-        entity = ListItem::class,
+        entity = ToDoList::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("list_id")
     )]
