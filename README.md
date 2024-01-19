@@ -23,3 +23,5 @@ While working on this, I ended up learning about an alpha feature of Hilt: Assis
 
 ## Future Goals
 I'd like to demonstrate that I am also familiar with the legacy Adapter + ViewBindings pattern. I'd recreate to recreate the app in XML as a separate BuildVariant.
+
+See also the Issues tab for tactical improvements I'd like to implement given the time.
