@@ -1,7 +1,6 @@
 package com.example.todolist.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -21,7 +20,7 @@ import com.example.todolist.viewmodels.MainActivityViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Home(viewModel: MainActivityViewModel = hiltViewModel(), navigateTo: (Int) -> Unit) {
+fun Home(viewModel: MainActivityViewModel = hiltViewModel(), goToList: (Int) -> Unit) {
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
     LazyColumn {
         items(lists) {
@@ -31,7 +30,7 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), navigateTo: (Int) -
                     TextButton(
                         onClick = {
                             viewModel.updateTitle(it.name)
-                            navigateTo(it.id)
+                            goToList(it.id)
                         }
                     ) {
                         Text(it.name)
