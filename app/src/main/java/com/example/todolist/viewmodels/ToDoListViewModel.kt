@@ -30,18 +30,6 @@ class ToDoListViewModel @AssistedInject constructor(
         fun create(parentListId: Int): ToDoListViewModel
     }
 
-    @Suppress("UNCHECKED_CAST")
-    companion object {
-        fun providesFactory(
-            assistedFactory: ToDoListViewModelFactory,
-            parentListId: Int
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(parentListId) as T
-            }
-        }
-    }
-
     private val _uiState = MutableStateFlow(
         UiState(currentInput =  "", completedItemCount = 0)
     )
