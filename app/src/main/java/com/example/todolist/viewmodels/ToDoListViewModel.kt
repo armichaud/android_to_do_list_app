@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 data class UiState(
     val currentInput: String,
-    val completedItemCount: Int,
+    val completedItemCount: Int = 0,
 )
 
 @HiltViewModel(assistedFactory = ToDoListViewModel.ToDoListViewModelFactory::class)
@@ -58,7 +58,7 @@ class ToDoListViewModel @AssistedInject constructor(
     }
 
     // State
-    private val _uiState = MutableStateFlow(UiState(currentInput =  "", completedItemCount = 0))
+    private val _uiState = MutableStateFlow(UiState(currentInput =  ""))
     val uiState: StateFlow<UiState> = _uiState
 
     fun updateCurrentInput(input: String) =  _uiState.update { it.copy(currentInput = input) }
