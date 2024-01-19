@@ -34,16 +34,16 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int, Str
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
 
     Box {
-        ExtendedFloatingActionButton(
-                onClick = { viewModel.openDialog() },
-                icon = { Icon(Icons.Filled.Edit, "Create new to-do list.") },
-                text = { Text(text = "New List") }
-        )
         LazyColumn {
             items(lists) {
                 ListItem(headlineContent = { Text(it.name) })
             }
         }
+        ExtendedFloatingActionButton(
+            onClick = { viewModel.openDialog() },
+            icon = { Icon(Icons.Filled.Edit, "Create new to-do list.") },
+            text = { Text(text = "New List") }
+        )
         when {
             uiState.dialogOpen ->
                 Dialog(
@@ -70,8 +70,11 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), openList: (Int, Str
                             }
                             item {
                                 TextButton(onClick = {
-                                    viewModel.newList()
-                                    openList(-1, "") // TODO
+                                    val id = viewModel.newList()
+                                    val listToLoad = uiState.selectedList
+                                    listToLoad?.let {
+                                        openList(it.id, it.name)
+                                    }
                                 }) {
                                     Text("Add")
                                 }

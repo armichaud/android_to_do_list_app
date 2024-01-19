@@ -2,8 +2,7 @@ package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.example.todolist.models.ToDoList
 import com.example.todolist.repositories.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,15 +11,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Entity(tableName = "to_do_list")
-data class ToDoList(
-    @PrimaryKey val id: Int = 0,
-    val name: String
-)
-
 data class HomeUiState (
     val newListInput: String,
-    val dialogOpen: Boolean = false
+    val dialogOpen: Boolean = false,
+    val selectedList: ToDoList? = null
 )
 
 @HiltViewModel
@@ -48,8 +42,14 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
 
     fun newList() {
         viewModelScope.launch {
-            repository.newList(_uiState.value.newListInput)
+            val id = repository.newList(_uiState.value.newListInput)
             clearInput()
+            setSelectedList(id)
         }
+    }
+
+    private fun setSelectedList(id: Long) {
+        val listToLoad = repository.getList(id)
+        _uiState.update { it.copy(selectedList = listToLoad) }
     }
 }

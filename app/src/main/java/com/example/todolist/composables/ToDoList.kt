@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
-import com.example.todolist.viewmodels.Status
+import com.example.todolist.utils.Status
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

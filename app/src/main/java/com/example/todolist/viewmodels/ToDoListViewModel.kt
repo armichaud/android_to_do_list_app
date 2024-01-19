@@ -1,41 +1,15 @@
 package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import com.example.todolist.models.ListItem
 import com.example.todolist.repositories.AppRepository
+import com.example.todolist.utils.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-
-enum class Status {
-    Todo, Done;
-
-    fun toggle(): Status = when (this) {
-        Todo -> Done
-        Done -> Todo
-    }
-}
-
-@Entity(
-    tableName = "list_item",
-    foreignKeys = [ForeignKey(
-        entity = ListItem::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("list_id")
-    )]
-)
-data class ListItem(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val label: String,
-    var status: Status = Status.Todo,
-    @ColumnInfo(name = "list_id") val listId: Int
-)
 
 data class UiState(
     val parentListId: Int,

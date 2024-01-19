@@ -1,8 +1,8 @@
 package com.example.todolist.repositories
 import com.example.todolist.database.AppDatabase
-import com.example.todolist.viewmodels.ListItem
-import com.example.todolist.viewmodels.Status
-import com.example.todolist.viewmodels.ToDoList
+import com.example.todolist.models.ListItem
+import com.example.todolist.utils.Status
+import com.example.todolist.models.ToDoList
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -12,9 +12,9 @@ class AppRepository @Inject constructor(private var db: AppDatabase) {
 
     fun getLists(): Flow<List<ToDoList>> = listDao.getAll()
 
-    fun newList(name: String) {
-        listDao.addList(ToDoList(name = name))
-    }
+    fun getList(id: Long): ToDoList = listDao.getList(id)
+
+    fun newList(name: String): Long = listDao.addList(ToDoList(name = name))
 
     fun getListContents(listId: Int): Flow<List<ListItem>> =
         listItemDao.getAllForList(listId)

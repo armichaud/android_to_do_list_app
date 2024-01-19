@@ -3,14 +3,13 @@ package com.example.todolist.database
 import android.content.Context
 import androidx.room.Dao
 import androidx.room.Database
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.todolist.viewmodels.ListItem
-import com.example.todolist.viewmodels.Status
-import com.example.todolist.viewmodels.ToDoList
+import com.example.todolist.models.ListItem
+import com.example.todolist.utils.Status
+import com.example.todolist.models.ToDoList
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,7 +48,10 @@ interface ListDao {
     fun getAll(): Flow<List<ToDoList>>
 
     @Insert
-    fun addList(list: ToDoList)
+    fun addList(list: ToDoList): Long
+
+    @Query("SELECT * FROM to_do_list WHERE id = :id")
+    fun getList(id: Long): ToDoList
 }
 
 @Dao
