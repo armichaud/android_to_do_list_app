@@ -26,25 +26,12 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
     private val _uiState = MutableStateFlow(MainActivityUiState(newListInput = ""))
     val uiState: StateFlow<MainActivityUiState> = _uiState
 
-    fun updateTitle(title: String = DEFAULT_TITLE) {
-        _uiState.update { it.copy(title = title) }
-    }
-
-    fun updateNewListInput(newInput: String) {
-        _uiState.update { it.copy(newListInput = newInput) }
-    }
-
-    fun openDialog() {
-        _uiState.update { it.copy(dialogOpen = true) }
-    }
-
-    fun closeDialog() {
-        _uiState.update { it.copy(dialogOpen = false) }
-    }
-
-    private fun clearInput() {
-        _uiState.update { it.copy(newListInput = "") }
-    }
+    fun updateTitle(title: String = DEFAULT_TITLE) = _uiState.update { it.copy(title = title) }
+    fun updateNewListInput(newInput: String) = _uiState.update { it.copy(newListInput = newInput) }
+    fun openDialog() = _uiState.update { it.copy(dialogOpen = true) }
+    fun closeDialog() = _uiState.update { it.copy(dialogOpen = false) }
+    fun deleteList(id: Int) = repository.deleteList(id)
+    private fun clearInput() = _uiState.update { it.copy(newListInput = "") }
 
     fun newList(navigate: (Long) -> Unit) {
         viewModelScope.launch {
@@ -56,8 +43,4 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
             navigate(id)
         }
     }
-
-    fun deleteList(id: Int) =
-        repository.deleteList(id)
-
 }

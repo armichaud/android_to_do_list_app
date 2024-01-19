@@ -29,20 +29,14 @@ class ToDoListViewModel @AssistedInject constructor(
         fun create(parentListId: Int): ToDoListViewModel
     }
 
-    private val _uiState = MutableStateFlow(
-        UiState(currentInput =  "", completedItemCount = 0)
-    )
+    private val _uiState = MutableStateFlow(UiState(currentInput =  "", completedItemCount = 0))
     val uiState: StateFlow<UiState> = _uiState
 
     val listItems = repository.getListContents(parentListId)
 
-    fun updateCurrentInput(input: String) {
-        _uiState.update { it.copy(currentInput = input) }
-    }
+    fun updateCurrentInput(input: String) =  _uiState.update { it.copy(currentInput = input) }
 
-    private fun clearCurrentInput() {
-        _uiState.update { it.copy(currentInput = "") }
-    }
+    private fun clearCurrentInput() = _uiState.update { it.copy(currentInput = "") }
 
     private fun addListItem() {
         viewModelScope.launch {
@@ -62,6 +56,7 @@ class ToDoListViewModel @AssistedInject constructor(
             repository.deleteListItemById(id)
         }
     }
+
     fun toggleItemStatus(item: ListItem) {
         val currentState = _uiState.value
         var updatedCompletedItemCount = currentState.completedItemCount
