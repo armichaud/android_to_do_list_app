@@ -6,7 +6,7 @@ Note to recruiters: This is a project I am prepared to discuss and explain in or
 I did not use GitHub Copilot or any LLMs to generate code for this project. 
 I occasionally used ChatGPT to ask general questions when searching the Android docs and developer forums did not yield a relevant answer.
 
-## Core Functionality:
+## Core Functionality
 - Create, view, and delete lists with custom names.
 - Create and mark as complete to-do list items. Delete to-do list items that are not yet marked as done.
 
