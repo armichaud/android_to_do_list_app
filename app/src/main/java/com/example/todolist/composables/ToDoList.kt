@@ -23,12 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.utils.Status
-import javax.inject.Inject
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
