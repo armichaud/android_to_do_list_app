@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.todolist.viewmodels.MainActivityViewModel
+import com.example.todolist.viewmodels.HomeViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Home(viewModel: MainActivityViewModel = hiltViewModel(), goToList: (Int) -> Unit) {
+fun Home(viewModel: HomeViewModel = hiltViewModel(), goToList: (Int, String) -> Unit) {
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
     LazyColumn {
         items(lists) {
@@ -29,8 +29,7 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), goToList: (Int) -> 
                 headlineContent = {
                     TextButton(
                         onClick = {
-                            viewModel.updateTitle(it.name)
-                            goToList(it.id)
+                            goToList(it.id, it.name)
                         }
                     ) {
                         Text(it.name)
@@ -48,5 +47,5 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel(), goToList: (Int) -> 
 @Preview
 @Composable
 fun MainPreview() {
-    Home() {}
+    Home { _, _ -> }
 }

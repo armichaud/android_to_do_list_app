@@ -75,7 +75,7 @@ class MainActivity: ComponentActivity() {
                     floatingActionButtonPosition = FabPosition.End
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        Navigation(navController)
+                        Navigation(navController) { title -> viewModel.updateTitle(title) }
                         when {
                             uiState.dialogOpen ->
                                 Dialog(

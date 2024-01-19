@@ -20,7 +20,6 @@ data class MainActivityUiState (
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
-    // State
     private val _uiState = MutableStateFlow(MainActivityUiState(newListInput = ""))
     val uiState: StateFlow<MainActivityUiState> = _uiState
 
@@ -40,8 +39,4 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
             navigate(id)
         }
     }
-
-    // Querying
-    val lists = repository.getLists()
-    fun deleteList(id: Int) = repository.deleteList(id)
 }
