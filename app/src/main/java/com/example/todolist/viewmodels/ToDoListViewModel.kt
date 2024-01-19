@@ -43,14 +43,12 @@ class ToDoListViewModel @Inject constructor(private var repository: AppRepositor
 
     private fun addListItem() {
         val currentState = _uiState.value
-        if (currentState.currentInput.isNotBlank()) {
-            viewModelScope.launch {
-                repository.addListItem(ListItem(label = currentState.currentInput, listId = currentState.parentListId))
-            }
+        viewModelScope.launch {
+            repository.addListItem(ListItem(label = currentState.currentInput, listId = currentState.parentListId))
         }
     }
 
-    fun handleDeselect() {
+    fun handleNewInput() {
         if (_uiState.value.currentInput.isNotBlank()) {
             addListItem()
             clearCurrentInput()
