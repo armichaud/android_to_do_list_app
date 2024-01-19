@@ -3,10 +3,12 @@ package com.example.todolist
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,14 +19,17 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -83,15 +88,27 @@ class MainActivity: ComponentActivity() {
                                     Card(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .height(375.dp)
                                             .padding(16.dp),
                                         shape = RoundedCornerShape(16.dp),
                                     ) {
-                                        Text("Give your list a name")
-                                        TextField(
+                                        Text(modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            text = "Create a new list",
+                                            textAlign = TextAlign.Center,
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                        OutlinedTextField(
+                                            modifier = Modifier.padding(16.dp),
                                             value = uiState.newListInput,
-                                            onValueChange = { viewModel.updateNewListInput(it) })
-                                        LazyRow {
+                                            onValueChange = { viewModel.updateNewListInput(it) },
+                                            label = { Text("List Name") }
+                                        )
+                                        LazyRow(
+                                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                            horizontalArrangement = Arrangement.SpaceEvenly
+                                        ) {
                                             item {
                                                 TextButton(onClick = {
                                                     viewModel.closeDialog()

@@ -15,7 +15,7 @@ const val LIST_ROUTE = "list"
 fun Navigation(navController: NavHostController = rememberNavController()) {
     NavHost(startDestination = "main", navController = navController) {
         composable("main") {
-            Home() { listId: Int -> navController.navigate("$LIST_ROUTE/$listId") }
+            Home { listId: Int -> navController.navigate("$LIST_ROUTE/$listId") }
         }
         composable(
             "$LIST_ROUTE/{$LIST_ID_KEY}",
