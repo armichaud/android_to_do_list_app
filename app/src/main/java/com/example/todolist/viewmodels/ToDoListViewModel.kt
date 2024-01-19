@@ -44,9 +44,6 @@ class ToDoListViewModel @AssistedInject constructor(
         _uiState.update { it.copy(currentInput = "") }
     }
 
-    private fun sortListItems(listItems: List<ListItem>): List<ListItem> =
-        listItems.sortedBy { it.status.ordinal }
-
     private fun addListItem() {
         viewModelScope.launch {
             repository.addListItem(ListItem(label = _uiState.value.currentInput, listId = parentListId))
