@@ -12,7 +12,10 @@ class AppRepository @Inject constructor(private var db: AppDatabase) {
 
     fun getLists(): Flow<List<ToDoList>> = listDao.getAll()
 
-    fun getList(id: Long): ToDoList = listDao.getList(id)
+    fun deleteList(id: Int) {
+        listItemDao.deleteListContents(id)
+        listDao.deleteList(id)
+    }
 
     fun newList(name: String): Long = listDao.addList(ToDoList(name = name))
 

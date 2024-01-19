@@ -18,6 +18,9 @@ interface ListDao {
 
     @Query("SELECT * FROM to_do_list WHERE id = :id")
     fun getList(id: Long): ToDoList
+
+    @Query("DELETE FROM to_do_list WHERE id = :id")
+    fun deleteList(id: Int)
 }
 
 @Dao
@@ -30,6 +33,9 @@ interface ListItemDao {
 
     @Query("DELETE FROM list_item WHERE id == :id")
     fun deleteListItem(id: Int)
+
+    @Query("DELETE FROM list_item WHERE list_id = :listId")
+    fun deleteListContents(listId: Int)
 
     @Query("UPDATE list_item SET status = :status WHERE id = :id")
     fun updateListItemStatus(id: Int, status: Status)

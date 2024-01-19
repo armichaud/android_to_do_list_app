@@ -60,4 +60,8 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
             navigate(id)
         }
     }
+
+    fun deleteList(id: Int) =
+        repository.deleteList(id)
+
 }
