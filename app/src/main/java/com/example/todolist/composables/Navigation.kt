@@ -12,13 +12,10 @@ const val LIST_ID_KEY = "listId"
 const val LIST_ROUTE = "list"
 
 @Composable
-fun Navigation(navController: NavHostController = rememberNavController(), updateTitle: (String?) -> Unit) {
+fun Navigation(navController: NavHostController = rememberNavController()) {
     NavHost(startDestination = "main", navController = navController) {
         composable("main") {
-            Home(
-                updateTitle = updateTitle,
-                navigate = { listId: Long -> navController.navigate("$LIST_ROUTE/$listId") }
-            )
+            Home()
         }
         composable(
             "$LIST_ROUTE/{$LIST_ID_KEY}",
