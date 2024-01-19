@@ -19,7 +19,7 @@ class AppRepository @Inject constructor(private var db: AppDatabase) {
 
     fun newList(name: String): Long = listDao.addList(ToDoList(name = name))
 
-    fun getListContents(listId: Int): List<ListItem> =
+    fun getListContents(listId: Int): Flow<List<ListItem>> =
         listItemDao.getAllForList(listId)
 
     fun addListItem(listItem: ListItem) {

@@ -26,7 +26,7 @@ interface ListDao {
 @Dao
 interface ListItemDao {
     @Query("SELECT * FROM list_item WHERE list_id == :listId ORDER BY status DESC, id")
-    fun getAllForList(listId: Int): List<ListItem>
+    fun getAllForList(listId: Int): Flow<List<ListItem>>
 
     @Insert
     fun addListItem(listItem: ListItem)

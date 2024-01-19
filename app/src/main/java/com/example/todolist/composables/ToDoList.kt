@@ -23,20 +23,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.ToDoListViewModel
 import com.example.todolist.utils.Status
+import javax.inject.Inject
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoList(
     parentListId: Int,
     modifier: Modifier = Modifier,
-    viewModel: ToDoListViewModel = hiltViewModel()
+    viewModel: ToDoListViewModel = hiltViewModel(
+        creationCallback = { factory: ToDoListViewModel.ToDoListViewModelFactory -> factory.create(parentListId) }
+    )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    viewModel.setParentList(parentListId)
-    val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
+    val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
+    val toDoItemCount = listItems.size - uiState.completedItemCount
 
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
@@ -57,7 +62,7 @@ fun ToDoList(
                 )
             }
         }
-        itemsIndexed(uiState.listItems, key = { _, item -> item.id }) { index, item ->
+        itemsIndexed(listItems, key = { _, item -> item.id }) { index, item ->
             val done = item.status == Status.Done
             if (uiState.completedItemCount > 0 && index == toDoItemCount) {
                 Text(
