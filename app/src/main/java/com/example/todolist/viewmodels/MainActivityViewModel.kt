@@ -21,8 +21,7 @@ data class MainActivityUiState (
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
-    val lists = repository.getLists()
-
+    // State
     private val _uiState = MutableStateFlow(MainActivityUiState(newListInput = ""))
     val uiState: StateFlow<MainActivityUiState> = _uiState
 
@@ -30,7 +29,6 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
     fun updateNewListInput(newInput: String) = _uiState.update { it.copy(newListInput = newInput) }
     fun openDialog() = _uiState.update { it.copy(dialogOpen = true) }
     fun closeDialog() = _uiState.update { it.copy(dialogOpen = false) }
-    fun deleteList(id: Int) = repository.deleteList(id)
     private fun clearInput() = _uiState.update { it.copy(newListInput = "") }
 
     fun newList(navigate: (Long) -> Unit) {
@@ -43,4 +41,8 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
             navigate(id)
         }
     }
+
+    // Querying
+    val lists = repository.getLists()
+    fun deleteList(id: Int) = repository.deleteList(id)
 }
