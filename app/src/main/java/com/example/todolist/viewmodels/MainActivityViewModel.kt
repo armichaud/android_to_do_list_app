@@ -1,86 +1,42 @@
 package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.todolist.repositories.AppRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-enum class Status {
-    Todo, Done;
+const val DEFAULT_TITLE = "To Do Lists"
 
-    fun toggle(): Status = when (this) {
-        Todo -> Done
-        Done -> Todo
-    }
-}
-
-data class ListItem(
-    val id: Int,
-    val label: String,
-    var status: Status = Status.Todo,
+data class MainActivityUiState (
+    val newListInput: String,
+    val dialogOpen: Boolean = false,
+    val title: String = DEFAULT_TITLE
 )
 
-data class UiState(
-    val listItems: List<ListItem>,
-    val currentInput: String,
-    val completedItemCount: Int,
-)
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(private var repository: AppRepository): ViewModel() {
+    private val _uiState = MutableStateFlow(MainActivityUiState(newListInput = ""))
+    val uiState: StateFlow<MainActivityUiState> = _uiState
 
-class MainActivityViewModel: ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(listItems = listOf(), currentInput =  "", completedItemCount = 0))
-    val uiState: StateFlow<UiState> = _uiState
+    fun updateTitle(title: String = DEFAULT_TITLE) = _uiState.update { it.copy(title = title) }
+    fun updateNewListInput(newInput: String) = _uiState.update { it.copy(newListInput = newInput) }
+    fun openDialog() = _uiState.update { it.copy(dialogOpen = true) }
+    fun closeDialog() = _uiState.update { it.copy(dialogOpen = false) }
+    private fun clearInput() = _uiState.update { it.copy(newListInput = "") }
 
-    private var nextId = 0;
-
-    fun updateCurrentInput(input: String) {
-        _uiState.update { it.copy(currentInput = input) }
-    }
-
-    private fun clearCurrentInput() {
-        _uiState.update { it.copy(currentInput = "") }
-    }
-
-    private fun incrementId() {
-        nextId += 1
-    }
-
-    private fun sortListItems(listItems: List<ListItem>): List<ListItem> =
-        listItems.sortedBy { it.status.ordinal }
-
-    private fun addListItem() {
-        _uiState.update { currentState ->
-            val updatedList = currentState.listItems + listOf(ListItem(id = nextId, label = currentState.currentInput))
-            currentState.copy(listItems = sortListItems(updatedList))
-        }
-    }
-
-    fun handleDeselect() {
-        if (_uiState.value.currentInput.isNotBlank()) {
-            addListItem()
-            clearCurrentInput()
-            incrementId()
-        }
-    }
-
-    fun removeListItem(id: Int) {
-        _uiState.update { currentState ->
-            currentState.copy(listItems = currentState.listItems.filter { it.id != id })
-        }
-    }
-
-    fun toggleItemStatus(id: Int) {
-        _uiState.update { currentState ->
-            var updatedCompletedItemCount = currentState.completedItemCount
-            val updatedList = currentState.listItems.map {
-                if (it.id == id) {
-                    val updatedStatus = it.status.toggle()
-                    updatedCompletedItemCount += if (updatedStatus == Status.Todo) { -1 } else { 1 }
-                    it.copy(status = updatedStatus)
-                } else {
-                    it
-                }
-            }
-            currentState.copy(listItems = sortListItems(updatedList), completedItemCount = updatedCompletedItemCount)
+    fun newList(navigate: (Long) -> Unit) {
+        viewModelScope.launch {
+            val name = _uiState.value.newListInput
+            val id = repository.newList(name)
+            closeDialog()
+            clearInput()
+            updateTitle(name)
+            navigate(id)
         }
     }
 }

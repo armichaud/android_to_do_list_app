@@ -1,10 +1,9 @@
 package com.example.todolist.composables
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -23,22 +22,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.ui.theme.ToDoListTheme
-import com.example.todolist.viewmodels.MainActivityViewModel
-import com.example.todolist.viewmodels.Status
+import com.example.todolist.viewmodels.ToDoListViewModel
+import com.example.todolist.utils.Status
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoList(
+    parentListId: Int,
     modifier: Modifier = Modifier,
-    innerPadding: PaddingValues = PaddingValues(0.dp),
-    viewModel: MainActivityViewModel = viewModel(),
+    viewModel: ToDoListViewModel = hiltViewModel(
+        creationCallback = { factory: ToDoListViewModel.ToDoListViewModelFactory -> factory.create(parentListId) }
+    ),
+    returnToMain: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val toDoItemCount = uiState.listItems.size - uiState.completedItemCount
-    LazyColumn(modifier = modifier.fillMaxWidth().padding(innerPadding)) {
+    val listItems by viewModel.listItems.collectAsStateWithLifecycle(emptyList())
+    val toDoItemCount = listItems.size - uiState.completedItemCount
+
+    BackHandler(enabled = true) {
+        returnToMain()
+    }
+
+    LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
             Text(
                 modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 16.dp),
@@ -53,11 +61,11 @@ fun ToDoList(
                     modifier = modifier,
                     uiState = uiState,
                     updateCurrentInput = { viewModel.updateCurrentInput(it) },
-                    handleDeselect = { viewModel.handleDeselect() }
+                    submitNewListItem = { viewModel.handleNewInput() }
                 )
             }
         }
-        itemsIndexed(uiState.listItems, key = { index, item -> item.id }) { index, item ->
+        itemsIndexed(listItems, key = { _, item -> item.id }) { index, item ->
             val done = item.status == Status.Done
             if (uiState.completedItemCount > 0 && index == toDoItemCount) {
                 Text(
@@ -82,7 +90,7 @@ fun ToDoList(
                 leadingContent = {
                     IconToggleButton(
                         checked = done,
-                        onCheckedChange = { viewModel.toggleItemStatus(item.id) }
+                        onCheckedChange = { viewModel.toggleItemStatus(item) }
                     ) {
                         if (done) {
                             Icon(Icons.Filled.CheckCircle, contentDescription = "Marked as done")
@@ -110,7 +118,7 @@ fun ToDoList(
                     modifier = modifier,
                     uiState = uiState,
                     updateCurrentInput = { viewModel.updateCurrentInput(it) },
-                    handleDeselect = { viewModel.handleDeselect() }
+                    submitNewListItem = { viewModel.handleNewInput() }
                 )
             }
         }
@@ -121,6 +129,6 @@ fun ToDoList(
 @Composable
 fun ToDoListPreview() {
     ToDoListTheme {
-        ToDoList()
+        ToDoList(parentListId = -1) {}
     }
 }
