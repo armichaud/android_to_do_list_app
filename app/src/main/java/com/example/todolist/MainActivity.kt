@@ -2,7 +2,6 @@ package com.example.todolist
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,12 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -34,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.todolist.composables.LIST_ROUTE
+import com.example.todolist.composables.MAIN_ROUTE
 import com.example.todolist.composables.Navigation
 import com.example.todolist.ui.theme.ToDoListTheme
 import com.example.todolist.viewmodels.DEFAULT_TITLE
@@ -61,16 +63,28 @@ class MainActivity: ComponentActivity() {
                             colors = topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 titleContentColor = MaterialTheme.colorScheme.onPrimary
-                            )
+                            ),
+                            navigationIcon = {
+                                when {
+                                    uiState.title != DEFAULT_TITLE -> IconButton(onClick = {
+                                        viewModel.updateTitle()
+                                        navController.navigate(MAIN_ROUTE)
+                                    }) {
+                                        Icon(Icons.Filled.ArrowBack, "Back arrow")
+                                    }
+                                }
+
+                            }
                         )
                     },
                     floatingActionButton = {
-                        if (uiState.title == DEFAULT_TITLE) {
-                            ExtendedFloatingActionButton(
-                                onClick = { viewModel.openDialog() },
-                                icon = { Icon(Icons.Filled.Edit, "Create new to-do list.") },
-                                text = { Text(text = "New List") }
-                            )
+                        when (uiState.title) {
+                             DEFAULT_TITLE ->
+                                ExtendedFloatingActionButton(
+                                    onClick = { viewModel.openDialog() },
+                                    icon = { Icon(Icons.Filled.Edit, "Create new to-do list.") },
+                                    text = { Text(text = "New List") }
+                                )
                         }
                     },
                     floatingActionButtonPosition = FabPosition.End
