@@ -1,7 +1,6 @@
 package com.example.todolist.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.models.ListItem
 import com.example.todolist.repositories.AppRepository
