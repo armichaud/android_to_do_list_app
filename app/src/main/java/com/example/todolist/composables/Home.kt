@@ -1,6 +1,5 @@
 package com.example.todolist.composables
 
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -18,12 +17,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todolist.viewmodels.MainActivityViewModel
 
 @Composable
-fun Home(viewModel: MainActivityViewModel = hiltViewModel()) {
+fun Home(viewModel: MainActivityViewModel = hiltViewModel(), navigateTo: (Int) -> Unit) {
     val lists by viewModel.lists.collectAsStateWithLifecycle(emptyList())
     LazyColumn {
         items(lists) {
             ListItem(
-                headlineContent = { TextButton(onClick = { /*TODO*/ }) { Text(it.name) } },
+                headlineContent = { TextButton(onClick = { navigateTo(it.id) }) { Text(it.name) } },
                 trailingContent = {
                     IconButton(
                         onClick = { viewModel.deleteList(it.id) }
@@ -37,5 +36,5 @@ fun Home(viewModel: MainActivityViewModel = hiltViewModel()) {
 @Preview
 @Composable
 fun MainPreview() {
-    Home()
+    Home() {}
 }
