@@ -54,7 +54,7 @@ fun ToDoList(
                     modifier = modifier,
                     uiState = uiState,
                     updateCurrentInput = { viewModel.updateCurrentInput(it) },
-                    handleDeselect = { viewModel.handleNewInput() }
+                    submitNewListItem = { viewModel.handleNewInput() }
                 )
             }
         }
@@ -111,7 +111,7 @@ fun ToDoList(
                     modifier = modifier,
                     uiState = uiState,
                     updateCurrentInput = { viewModel.updateCurrentInput(it) },
-                    handleDeselect = { viewModel.handleNewInput() }
+                    submitNewListItem = { viewModel.handleNewInput() }
                 )
             }
         }

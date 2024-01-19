@@ -26,7 +26,6 @@ class MainActivityViewModel @Inject constructor(private var repository: AppRepos
     private val _uiState = MutableStateFlow(MainActivityUiState(newListInput = ""))
     val uiState: StateFlow<MainActivityUiState> = _uiState
 
-
     fun updateTitle(title: String = DEFAULT_TITLE) {
         _uiState.update { it.copy(title = title) }
     }
