@@ -24,6 +24,6 @@ To view a demo of this functionality, download the mp4 [here](https://github.com
 While working on this, I ended up learning about an alpha feature of Hilt: Assisted Injection with ViewModels. See [this Medium article](https://medium.com/@alexander.michaud/hiltviewmodel-assisted-injection-with-compose-a800723165bf) I wrote about it for details.
 
 ## Future Goals
-I'd like to demonstrate that I am also familiar with the legacy Adapter + ViewBindings pattern. I'd like to recreate the app in XML as a separate BuildVariant.
+I'd like to demonstrate that I am also familiar with the legacy Adapter + ViewBindings pattern, so I might recreate the app in XML as a separate BuildVariant.
 
 See also the Issues tab for tactical improvements I'd like to implement when I have the time.
