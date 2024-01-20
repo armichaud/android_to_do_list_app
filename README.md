@@ -10,6 +10,8 @@ I occasionally used ChatGPT to ask general questions when searching the Android 
 - Create, view, and delete lists with custom names.
 - Create and mark as complete to-do list items. Delete to-do list items that are not yet marked as done.
 
+To view a demo of this functionality, download the mp4 [here](https://github.com/armichaud/android_to_do_list_app/blob/main/demo.mp4).
+
 ## Implementation Details
 - Jetpack Compose Material3 Functions to build UI
 - Hilt+Dagger to manage injection of ViewModels and AppRepository (see _Assisted Injection_ below)
